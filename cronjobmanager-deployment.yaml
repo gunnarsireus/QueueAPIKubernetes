@@ -24,4 +24,4 @@ spec:
         - name: ASPNETCORE_URLS
           value: http://+:5000
         - name: ConnectionStrings__CronJobManagerDbConnection
-          value: Server=host.docker.internal,1433;Database=CronJobManagerDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+          value: Server=sql-server,1433;Database=CronJobManagerDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false

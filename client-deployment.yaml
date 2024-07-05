@@ -24,6 +24,6 @@ spec:
         - name: ASPNETCORE_HTTP_PORTS
           value: "80"
         - name: ConnectionStrings__ASPNETDbConnection
-          value: Server=host.docker.internal,1433;Database=ASPNETDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+          value: Server=sql-server,1433;Database=ASPNETDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
         - name: ConnectionStrings__QueueDbConnection
-          value: Server=host.docker.internal,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+          value: Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false

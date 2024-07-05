@@ -19,6 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", 
 		cronjobmanager-deployment.yaml = cronjobmanager-deployment.yaml
 		cronjobmanager-service.yaml = cronjobmanager-service.yaml
 		server-deployment.yaml = server-deployment.yaml
+		server-service.yaml = server-service.yaml
+		sql-server-deployment.yaml = sql-server-deployment.yaml
+		sql-server-service.yaml = sql-server-service.yaml
 	EndProjectSection
 EndProject
 Global

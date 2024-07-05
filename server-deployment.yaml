@@ -16,12 +16,14 @@ spec:
       - name: server
         image: server:latest
         imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Development
         - name: ASPNETCORE_HTTP_PORTS
           value: "80"
         - name: ConnectionStrings__CarApiConnection
-          value: Server=host.docker.internal,1433;Database=CarDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+          value: Server=sql-server,1433;Database=CarDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
         - name: ConnectionStrings__QueueDbConnection
-          value: Server=host.docker.internal,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+          value: Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
