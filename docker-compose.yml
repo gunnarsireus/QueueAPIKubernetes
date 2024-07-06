@@ -1,0 +1,40 @@
+services:
+  server:
+    image: ${DOCKER_REGISTRY-}server
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=80
+      - ConnectionStrings__CarApiConnection=Server=sql-server,1433;Database=CarDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+      - ConnectionStrings__QueueDbConnection=Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+
+  client:
+    image: ${DOCKER_REGISTRY-}client
+    build:
+      context: .
+      dockerfile: Client/Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=80
+      - ConnectionStrings__ASPNETDbConnection=Server=sql-server,1433;Database=ASPNETDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+      - ConnectionStrings__QueueDbConnection=Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+    depends_on:
+      - server
+ 
+  cronjobmanager:
+    image: ${DOCKER_REGISTRY-}cronjobmanager
+    build:
+      context: .
+      dockerfile: CronJobManager/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__CronJobManagerDbConnection=Server=sql-server,1433;Database=CronJobManagerDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+    depends_on:
+      - client

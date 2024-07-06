@@ -2,12 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: client
+  labels:
+    app: client
 spec:
-  type: NodePort
+  type: NodePort  # Add this line if you need external access
   ports:
-    - name: http
+    - name: "8080"
       port: 8080
       targetPort: 80
-      nodePort: 30080  # NodePort must be between 30000-32767
+      nodePort: 30082  # Add this line if specifying NodePort
   selector:
     app: client

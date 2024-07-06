@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: cronjobmanager
   name: cronjobmanager
 spec:
   replicas: 1
@@ -13,15 +15,16 @@ spec:
         app: cronjobmanager
     spec:
       containers:
-      - name: cronjobmanager
-        image: cronjobmanager:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 5000
-        env:
-        - name: ASPNETCORE_ENVIRONMENT
-          value: Development
-        - name: ASPNETCORE_URLS
-          value: http://+:5000
-        - name: ConnectionStrings__CronJobManagerDbConnection
-          value: Server=sql-server,1433;Database=CronJobManagerDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_URLS
+              value: http://+:5000
+            - name: ConnectionStrings__CronJobManagerDbConnection
+              value: Server=sql-server,1433;Database=CronJobManagerDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+          image: localhost:5000/cronjobmanager:latest
+          name: cronjobmanager
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+      restartPolicy: Always

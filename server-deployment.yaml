@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: server
   name: server
 spec:
   replicas: 1
@@ -13,17 +15,15 @@ spec:
         app: server
     spec:
       containers:
-      - name: server
-        image: server:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-        env:
-        - name: ASPNETCORE_ENVIRONMENT
-          value: Development
-        - name: ASPNETCORE_HTTP_PORTS
-          value: "80"
-        - name: ConnectionStrings__CarApiConnection
-          value: Server=sql-server,1433;Database=CarDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
-        - name: ConnectionStrings__QueueDbConnection
-          value: Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "80"
+            - name: ConnectionStrings__CarApiConnection
+              value: Server=sql-server,1433;Database=CarDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+            - name: ConnectionStrings__QueueDbConnection
+              value: Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
+          image: localhost:5000/server:latest
+          name: server
+      restartPolicy: Always
