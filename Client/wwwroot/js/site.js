@@ -1,5 +1,5 @@
 ﻿$(document).ready(() => {
-  const apiPort = 63566;
+  const apiPort = 8080;
 
   const ShowCars = () => {
     window.location = "/Car/index?id=" + $('#CarsForCompany').val();

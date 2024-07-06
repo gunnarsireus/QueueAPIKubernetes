@@ -13,15 +13,16 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:63569/"
+      "applicationUrl": "http://localhost:8080"
     },
-    "Container (Dockerfile)": {
+    "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
-        "ASPNETCORE_HTTP_PORTS": "8080"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HTTP_PORTS": "80"
       },
+      "applicationUrl": "http://localhost:8080",
       "publishAllPorts": true
     }
   },
@@ -29,8 +30,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:63566/",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:57960/",
+      "sslPort": 44328
     }
   }
 }

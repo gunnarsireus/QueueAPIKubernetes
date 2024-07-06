@@ -22,7 +22,7 @@ spec:
               value: http://+:5000
             - name: ConnectionStrings__CronJobManagerDbConnection
               value: Server=sql-server,1433;Database=CronJobManagerDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
-          image: localhost:5000/cronjobmanager:latest
+          image: gunnarsireus/cronjobmanager:latest
           name: cronjobmanager
           ports:
             - containerPort: 5000

@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Shared.DAL;
 using Shared.Repositories;
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -27,18 +28,21 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+        await Task.Delay(TimeSpan.FromSeconds(5));
+
         CultureInfo.CurrentUICulture = new CultureInfo("en-US");
 
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration
-          .AddJsonFile("appsettings.json");
+            .AddJsonFile("appsettings.json");
 
+        builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
+        builder.Logging.AddDebug();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("ASPNETDbConnection")));
-
 
         builder.Services.AddTransient<ApplicationDbContext>();
         builder.Services.AddTransient<IdentityDbContext<ApplicationUser>>();
@@ -77,16 +81,18 @@ public class Program
         builder.Services.AddTransient<IQueueRepository, QueueRepository>();
         builder.Services.AddTransient<IClientMessageHub, ClientMessageHub>();
         builder.Services.AddSingleton<JobStatusManager>();
+
         var app = builder.Build();
-        
+
         using (var scope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
         {
-            scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreated();
-            var context = scope.ServiceProvider.GetRequiredService<QueueDbContext>();
+            var appDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            appDbContext.Database.EnsureCreated();
 
-            context.Database.EnsureCreated();
-            await context.Database.ExecuteSqlRawAsync("delete ClientQueue");
-            await context.Database.ExecuteSqlRawAsync("delete ServerQueue");
+            var queueDbContext = scope.ServiceProvider.GetRequiredService<QueueDbContext>();
+            queueDbContext.Database.EnsureCreated();
+            await queueDbContext.Database.ExecuteSqlRawAsync("delete ClientQueue");
+            await queueDbContext.Database.ExecuteSqlRawAsync("delete ServerQueue");
         }
 
         var envIsDevelopment = app.Environment.IsDevelopment();
@@ -123,8 +129,8 @@ public class Program
         app.MapControllers();
 
         app.MapControllerRoute(
-          name: "default",
-          pattern: "{controller=Home}/{action=Index}/{id?}");
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
 
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -132,6 +138,7 @@ public class Program
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "CarAPI V1");
             c.RoutePrefix = "swagger";
         });
+
         await app.RunAsync().ConfigureAwait(false);
     }
 }
