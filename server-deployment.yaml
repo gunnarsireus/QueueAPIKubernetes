@@ -20,7 +20,7 @@ spec:
               value: Development
             - name: ASPNETCORE_HTTP_PORTS
               value: "80"
-            - name: ConnectionStrings__CarApiConnection
+            - name: ConnectionStrings__CarDbConnection
               value: Server=sql-server,1433;Database=CarDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false
             - name: ConnectionStrings__QueueDbConnection
               value: Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword123;Max Pool Size=100;Encrypt=false

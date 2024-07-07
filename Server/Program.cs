@@ -56,7 +56,7 @@ internal class Program
                     options.UseSqlServer(configuration.GetConnectionString("QueueDbConnection")));
 
                services.AddDbContext<CarApiDbContext>(options =>
-                    options.UseSqlServer(configuration.GetConnectionString("CarApiConnection")));
+                    options.UseSqlServer(configuration.GetConnectionString("CarDbConnection")));
 
                services.AddTransient<ICarRepository, CarRepository>();
                services.AddTransient<ICompanyRepository, CompanyRepository>();
