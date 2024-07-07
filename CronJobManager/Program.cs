@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RestSharp;
+using System;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -24,6 +26,15 @@ namespace CronJobManager
         public static void Main(string[] args)
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            // Ensure the database is created
+            EnsureDatabase(configuration);
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -62,15 +73,15 @@ namespace CronJobManager
                         var localizationOptions = new RequestLocalizationOptions
                         {
                             DefaultRequestCulture = new RequestCulture(ci),
-                            SupportedCultures = [ci],
-                            SupportedUICultures = [ci]
+                            SupportedCultures = new[] { ci },
+                            SupportedUICultures = new[] { ci }
                         };
 
                         app.UseRequestLocalization(localizationOptions);
 
                         app.UseHangfireDashboard("/hangfire", new DashboardOptions
                         {
-                            Authorization = [new AuthorizationFilter()]
+                            Authorization = new[] { new AuthorizationFilter() }
                         });
 
                         app.UseRouting();
@@ -78,8 +89,41 @@ namespace CronJobManager
                         app.UseEndpoints(endpoints =>
                         {
                             endpoints.MapHangfireDashboard();
+                            endpoints.MapControllers();
                         });
                     });
                 });
+
+        private static void EnsureDatabase(IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("CronJobManagerDbConnection");
+
+            // Connection string for master database to check and create the database
+            var masterConnectionString = connectionString.Replace("Database=CronJobManagerDb;", "Database=master;");
+
+            using (var connection = new SqlConnection(masterConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    var commandText = @"
+                        IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'CronJobManagerDb')
+                        BEGIN
+                            CREATE DATABASE [CronJobManagerDb]
+                        END";
+
+                    using (var command = new SqlCommand(commandText, connection))
+                    {
+                        command.ExecuteNonQuery();
+                        Console.WriteLine("Database 'CronJobManagerDb' ensured.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred while creating the database: {ex.Message}");
+                }
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ spec:
         - containerPort: 1433
         env:
         - name: SA_PASSWORD
-          value: "StrongPassword123"
+          value: "StrongPassword@123"
         - name: ACCEPT_EULA
           value: "Y"
         resources:
