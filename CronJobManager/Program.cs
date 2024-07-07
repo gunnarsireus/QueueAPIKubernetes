@@ -44,7 +44,7 @@ namespace CronJobManager
                             // Add other logging providers as necessary
                         });
 
-                        var connectionString = configuration.GetConnectionString("CronJobManager");
+                        var connectionString = configuration.GetConnectionString("CronJobManagerConnection");
                         services.AddHangfire(config => config.UseSqlServerStorage(connectionString));
                         services.AddHangfireServer();
                         services.AddSingleton<IRestClientFactory, RestClientFactory>();
