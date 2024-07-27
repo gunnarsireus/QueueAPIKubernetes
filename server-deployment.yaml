@@ -24,6 +24,6 @@ spec:
               value: Server=sql-server,1433;Database=CarDb;User Id=sa;Password=StrongPassword@123;Max Pool Size=100;Encrypt=false
             - name: ConnectionStrings__QueueDbConnection
               value: Server=sql-server,1433;Database=QueueDb;User Id=sa;Password=StrongPassword@123;Max Pool Size=100;Encrypt=false
-          image: yourdockerregister/server:latest-k8s
+          image: server:latest-k8s
           name: server
       restartPolicy: Always
